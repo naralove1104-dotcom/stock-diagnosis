@@ -127,8 +127,23 @@ if st.button("🚀 진단 결과 확인 및 저장", type="primary", use_contain
             
         st.toast(f"💾 '{DB_FILE}' 파일에 저장되었습니다!", icon="✅")
 
-# === [6] 하단: 저장된 기록 보여주기 ===
+# === [6] 하단: 저장된 기록 보여주기 + 삭제 기능 ===
 if os.path.exists(DB_FILE):
     with st.expander("📂 내 진단 기록 보기 (엑셀 데이터)"):
+        # 1. 데이터 읽어서 보여주기
         history_df = pd.read_csv(DB_FILE)
         st.dataframe(history_df, use_container_width=True)
+        
+        st.markdown("---")
+        
+        # 2. 삭제 버튼 영역 (오른쪽 정렬을 위해 컬럼 나눔)
+        c1, c2 = st.columns([3, 1]) 
+        
+        with c2:
+            # 버튼을 누르면 파일 삭제
+            if st.button("🗑️ 기록 전체 삭제", type="primary"):
+                os.remove(DB_FILE) # 파일(DB)을 물리적으로 삭제
+                st.rerun() # 화면을 즉시 새로고침해서 반영
+        
+        with c1:
+            st.caption("⚠️ '삭제' 버튼을 누르면 모든 진단 기록이 영구적으로 사라집니다.")
